@@ -11,5 +11,16 @@ for uu in range(0,45):
 
 
 
+'''
+start by defining a class of states with methods:
+    -print the state
+    -is winner
+    -is looser
+    -is draw
+    -next state given the action 
+'''
+
+
+
 
 
