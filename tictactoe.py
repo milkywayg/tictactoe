@@ -42,14 +42,36 @@ class ttt_cl:
     def game_done(self):
         s=self.state
         return not(0 in s)
+    #place is a number from 0-8
     def ply_action(self, place=0, plyr=1):
-        
+        s=self.state
+        sf=s.flatten()
+        if (place<0 or place>8):
+            return 1
+        else:
+            sf[place]=plyr
+            self.state=np.reshape(sf,(ms,ms))
+            return 0
+
+    def draw(self):
+        s=self.state
+        for idx_ln, ln in enumerate(s):
+            for idx_col, val in enumerate(ln):
+                pos=idx_ln*ms+idx_col
+                print('|',end=' ')
+                #this case is empty
+                if (s[idx_ln,idx_col]==0):
+                    print(repr(pos).center(3),end='|')
+                elif (s[idx_ln,idx_col]==1):
+                    print('X'.center(3),end='|')
+                elif (s[idx_ln,idx_col]==-1):
+                    print('O'.center(3),end='|')
+                print('|')
 
 
-
-
-
-
+#main
+game=ttt_cl()
+game.draw()
 
 
 
