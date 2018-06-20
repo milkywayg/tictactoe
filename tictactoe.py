@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import numpy as np
+import os
+import random as rn
 
 #  for ii in range(0,5):
 #      print ("line number="+str(ii))
@@ -21,6 +23,11 @@ start by defining a class of states with methods:
 '''
 
 ms=3
+
+def cls():
+   os.system('clear') 
+
+
 class ttt_cl:
     #the state is represented by a 3x3 matrix
     #0 means empty case, 1 is X from the cpu, 0 is O from the opponent
@@ -40,8 +47,11 @@ class ttt_cl:
         return not (self.is_winner(1) or self.is_winner(-1))
 
     def game_done(self):
+        comput_win=self.is_winner(1)
+        plyr_win=self.is_winner(-1)
         s=self.state
-        return not(0 in s)
+        return (not(0 in s) or comput_win or plyr_win)
+
     #place is a number from 0-8
     def ply_action(self, place=0, plyr=1):
         s=self.state
@@ -56,9 +66,10 @@ class ttt_cl:
     def draw(self):
         s=self.state
         for idx_ln, ln in enumerate(s):
+            print(' '*10,end=' ')
+            print('|',end=' ')
             for idx_col, val in enumerate(ln):
                 pos=idx_ln*ms+idx_col
-                print('|',end=' ')
                 #this case is empty
                 if (s[idx_ln,idx_col]==0):
                     print(repr(pos).center(3),end='|')
@@ -66,16 +77,46 @@ class ttt_cl:
                     print('X'.center(3),end='|')
                 elif (s[idx_ln,idx_col]==-1):
                     print('O'.center(3),end='|')
-                print('|')
+            print('')
+
+    def free_pos(self):
+        s=self.state
+        sf=s.flatten()
+        free=np.where(sf==0)
+        return free[0].tolist()
+
+    def free_pos_bm(self):
+        s=self.state
+        sf=s.flatten()
+        return sf==0
+
+#====================================
+
+
+def rand_policy(game):
+    return game.free_pos()[rn.randrange(len(game.free_pos()))]
 
 
 #main
 game=ttt_cl()
-game.draw()
+pos=9
+while not game.game_done():
+    cls()
+    game.draw()
+    while (not(pos in game.free_pos())):
+        pos_s = input("Enter a position:")
+        pos=int(pos_s)
+    #player
+    game.ply_action(place=pos,plyr=-1)
+    #computer
+    pos_comput=rand_policy(game)
+    game.ply_action(place=pos_comput,plyr=1)
 
 
-
-
+if (game.is_winner(1)):
+    print("You loose :-(")
+else:
+    print("You WIIIIN!! :-)")
 
 
 
