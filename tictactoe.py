@@ -39,8 +39,8 @@ class ttt_cl:
         s=self.state
         dg0=[s[ii,ii] for ii in range(ms)]
         dg1=[s[2-ii,2-ii] for ii in range(ms)]
-        line_sum=[s.sum(axis=0),s.sum(axis=1),s.sum(axis=2)]
-        line_sum_l=np.concatenate(line_sum).ravel().tolist()+[dg0.sum()]+[dg1.sum()]
+        line_sum=[s.sum(axis=0),s.sum(axis=1)]
+        line_sum_l=np.concatenate(line_sum).ravel().tolist()+[sum(dg0)]+[sum(dg1)]
         return (plyr*ms) in line_sum_l
 
     def no_winner(self):
@@ -66,7 +66,7 @@ class ttt_cl:
     def draw(self):
         s=self.state
         for idx_ln, ln in enumerate(s):
-            print(' '*10,end=' ')
+            print(' '*30,end=' ')
             print('|',end=' ')
             for idx_col, val in enumerate(ln):
                 pos=idx_ln*ms+idx_col
@@ -97,7 +97,7 @@ def rand_policy(game):
     return game.free_pos()[rn.randrange(len(game.free_pos()))]
 
 
-#main
+#====== main =======
 game=ttt_cl()
 pos=9
 while not game.game_done():
@@ -109,15 +109,18 @@ while not game.game_done():
     #player
     game.ply_action(place=pos,plyr=-1)
     #computer
-    pos_comput=rand_policy(game)
-    game.ply_action(place=pos_comput,plyr=1)
+    if (not game.game_done()):
+        pos_comput=rand_policy(game)
+        game.ply_action(place=pos_comput,plyr=1)
 
 
+cls()
+game.draw()
 if (game.is_winner(1)):
     print("You loose :-(")
 else:
     print("You WIIIIN!! :-)")
-
+print()
 
 
 
