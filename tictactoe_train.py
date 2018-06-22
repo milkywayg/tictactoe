@@ -58,7 +58,24 @@ def reward(game, action_pos=0):
         return 0
 
 vs=[-1,0,-1]
-print(cartesian((vs,vs,vs)))
+fstate=cartesian((vs,vs,vs,vs,vs,vs,vs,vs,vs)) 
+
+#Q-function is vector of 9 + 1 (state+action)
+
+qinit=np.zeros(3^9*)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
