@@ -2,7 +2,7 @@
 import numpy as np
 
 
-
+ms=3
 
 class ttt_cl:
     #the state is represented by a 3x3 matrix
@@ -12,7 +12,7 @@ class ttt_cl:
         if (state==[]):
             self.state=np.zeros((ms,ms))
         else:
-            self.state=np.reshape(np.asarray(state),(3,3))
+            self.state=state # np.reshape(np.asarray(state),(3,3))
 
     def is_winner(self, plyr=1):
         s=self.state
@@ -31,14 +31,14 @@ class ttt_cl:
         s=self.state
         return (not(0 in s) or comput_win or plyr_win)
 
-    #place is a number from 0-8
-    def ply_action(self, place=0, plyr=1):
+    #pos is a number from 0-8
+    def ply_action(self, pos=0, plyr=1):
         s=self.state
         sf=s.flatten()
-        if (place<0 or place>8):
+        if (pos<0 or pos>8):
             return 1
         else:
-            sf[place]=plyr
+            sf[pos]=plyr
             self.state=np.reshape(sf,(ms,ms))
             return 0
 

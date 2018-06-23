@@ -34,11 +34,11 @@ while not game.game_done():
         pos_s = input("Enter a position:")
         pos=int(pos_s)
     #player
-    game.ply_action(place=pos,plyr=-1)
+    game.ply_action(pos=pos,plyr=-1)
     #computer
     if (not game.game_done()):
         pos_comput=rand_policy(game)
-        game.ply_action(place=pos_comput,plyr=1)
+        game.ply_action(pos=pos_comput,plyr=1)
 
 
 cls()
