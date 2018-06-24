@@ -18,7 +18,7 @@ class ttt_cl:
     def is_winner(self, plyr=1):
         s=self.state
         dg0=[s[ii,ii] for ii in range(ms)]
-        dg1=[s[ms-1-ii,ms-1-ii] for ii in range(ms)]
+        dg1=[s[ii,ms-1-ii] for ii in range(ms)]
         line_sum=[s.sum(axis=0),s.sum(axis=1)]
         line_sum_l=np.concatenate(line_sum).ravel().tolist()+[sum(dg0)]+[sum(dg1)]
         return (plyr*ms) in line_sum_l
