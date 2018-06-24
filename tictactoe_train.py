@@ -66,7 +66,7 @@ def bellman_iter():
         n_err=np.amax(n_err_arr)
         err=n_err
         print("==== Iteration #"+str(idx)+" error="+str(err))
-        q=n_q
+        q=np.copy(n_q)
         idx+=1
     return q
 
