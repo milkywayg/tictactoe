@@ -22,7 +22,7 @@ def bellman_1_step_iter(q):
     idx=0
     m_q=[]
     for line in q:
-        m_q[idx]=max(line)
+        m_q=m_q+[max(line)]
         idx+=1
     nxt_q=qinit
     for st in range(tl.num_state):
@@ -31,7 +31,8 @@ def bellman_1_step_iter(q):
         for at in range(tl.num_action):
             rwd=reward(game=cs_cl,action_pos=at)
             #compute next state- s'
-            ns_cl=cs_cl.ply_action(pos=at,plyr=1)
+            ns_cl=cs_cl
+            ns_cl.ply_action(pos=at,plyr=1)
             ns_arr=ns_cl.state.flatten()
             ns_idx=tl.fstate.tolist().index(ns_arr.tolist())
             nxt_q[st,at]=rwd+m_q[ns_idx]
