@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import numpy as np
+from copy import copy, deepcopy
 
 
 ms=3
@@ -12,7 +13,7 @@ class ttt_cl:
         if (state==[]):
             self.state=np.zeros((ms,ms))
         else:
-            self.state=state # np.reshape(np.asarray(state),(3,3))
+            self.state=np.copy(state) # np.reshape(np.asarray(state),(3,3))
 
     def is_winner(self, plyr=1):
         s=self.state

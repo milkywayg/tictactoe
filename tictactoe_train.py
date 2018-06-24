@@ -3,6 +3,7 @@ import numpy as np
 import os
 import tictactoe_lib as tl
 import pickle
+from copy import copy, deepcopy
 
 
 #  f = open('test1.p', 'wb')
@@ -18,7 +19,7 @@ import pickle
 
 
 def reward(game, action_pos=0):
-    t_game=game
+    t_game=deepcopy(game)
     t_game.ply_action(pos=action_pos,plyr=1)
     if (t_game.is_winner(plyr=1)):
         return 1
@@ -37,7 +38,7 @@ def bellman_1_step_iter(q):
     for line in q:
         m_q=m_q+[max(line)]
         idx+=1
-    nxt_q=qinit
+    nxt_q=np.copy(qinit)
     for st in range(tl.num_state):
         cs_arr=tl.fstate[st]
         cs_cl=tl.ttt_cl(cs_arr)
@@ -46,7 +47,7 @@ def bellman_1_step_iter(q):
 #                  print(str(st)+" and "+str(at))
             rwd=reward(game=cs_cl,action_pos=at)
             #compute next state- s'
-            ns_cl=cs_cl
+            ns_cl=deepcopy(cs_cl)
             ns_cl.ply_action(pos=at,plyr=1)
             ns_arr=ns_cl.state.flatten()
             ns_idx=tl.fstate.tolist().index(ns_arr.tolist())
@@ -54,7 +55,7 @@ def bellman_1_step_iter(q):
     return nxt_q
 
 def bellman_iter():
-    q=qinit
+    q=np.copy(qinit)
     eps=1e-3
     err=1
     idx=0
