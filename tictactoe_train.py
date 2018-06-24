@@ -2,6 +2,19 @@
 import numpy as np
 import os
 import tictactoe_lib as tl
+import pickle
+
+
+#  f = open('test1.p', 'wb')
+#  pickle.dump(tl.fstate, f)
+#  f.close()
+
+
+#  f = open('test1.p', 'rb')
+#  ff= pickle.load(f)
+#  f.close()
+
+#  print(ff)
 
 
 def reward(game, action_pos=0):
@@ -29,6 +42,8 @@ def bellman_1_step_iter(q):
         cs_arr=tl.fstate[st]
         cs_cl=tl.ttt_cl(cs_arr)
         for at in range(tl.num_action):
+#              if (st%1000==0):
+#                  print(str(st)+" and "+str(at))
             rwd=reward(game=cs_cl,action_pos=at)
             #compute next state- s'
             ns_cl=cs_cl
@@ -44,17 +59,23 @@ def bellman_iter():
     err=1
     idx=0
     while err>eps:
+        print("---- Iteration number ="+str(idx))
         n_q=bellman_1_step_iter(q)
         n_err_arr=abs(n_q-q)
         n_err=np.amax(n_err_arr)
-        if (n_err>err):
-            err=n_err
-            print("==== Iteration #"+str(idx)+" error="+str(err))
+        err=n_err
+        print("==== Iteration #"+str(idx)+" error="+str(err))
+        q=n_q
         idx+=1
+    return q
 
 #====================
-bellman_iter()
+q_end=bellman_iter()
 
+
+f = open('q_func.p', 'wb')
+pickle.dump(q_end, f)
+f.close()
 
         
 
