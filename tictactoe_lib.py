@@ -32,16 +32,28 @@ class ttt_cl:
         s=self.state
         return (not(0 in s) or comput_win or plyr_win)
 
+    #capture the fact that the game should be balanced in X and 0
+    def is_bad_state(self):
+        if (abs(np.sum(self.state))==1 or abs(np.sum(self.state))==0):
+            return 0
+        else:
+            return 1
+
     #pos is a number from 0-8
     def ply_action(self, pos=0, plyr=1):
         s=self.state
         sf=s.flatten()
-        if (pos<0 or pos>8):
-            return 1
+        if (pos<0 or pos>((ms**2)-1)):
+            return 1 #error
         else:
-            sf[pos]=plyr
-            self.state=np.reshape(sf,(ms,ms))
-            return 0
+            if (np.sum(self.state)==1):
+                return 1 #error bad action get out of balance
+            if (sf[pos]==0):
+                sf[pos]=plyr
+                self.state=np.reshape(sf,(ms,ms))
+                return 0
+            else:
+                return 1
 
     def draw(self):
         s=self.state
@@ -125,8 +137,8 @@ def cartesian(arrays, out=None):
 
 vs=[-1,0,1]
 num_state=(len(vs))**(ms**2)
-num_action=4
-fstate=cartesian((vs,vs,vs,vs,vs,vs,vs,vs,vs)) 
+num_action=ms**2
+fstate=cartesian((vs,vs,vs,vs)) #,vs,vs,vs,vs,vs)) 
 
 
 

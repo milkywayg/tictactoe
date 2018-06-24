@@ -17,10 +17,13 @@ from copy import copy, deepcopy
 
 #  print(ff)
 
+big_neg=-1000
 
 def reward(game, action_pos=0):
     t_game=deepcopy(game)
-    t_game.ply_action(pos=action_pos,plyr=1)
+    err=t_game.ply_action(pos=action_pos,plyr=1)
+    if (err==1):
+        return -1
     if (t_game.is_winner(plyr=1)):
         return 1
     else:
@@ -30,6 +33,7 @@ def reward(game, action_pos=0):
 #Q-function is vector of 9 + 1 (state+action)
 
 qinit=np.zeros((tl.num_state,tl.num_action))
+ms=tl.ms
 
 def bellman_1_step_iter(q):
     #compute max_a' Q(s',a')
@@ -40,18 +44,27 @@ def bellman_1_step_iter(q):
         idx+=1
     nxt_q=np.copy(qinit)
     for st in range(tl.num_state):
-        cs_arr=tl.fstate[st]
+        cs_arr=np.reshape(tl.fstate[st],(ms,ms))
         cs_cl=tl.ttt_cl(cs_arr)
-        for at in range(tl.num_action):
+        if (st==39):
+            print('dd')
+            pass
+        if (cs_cl.game_done() or cs_cl.is_bad_state()):
+            nxt_q[st,:]=np.zeros((1,tl.num_action))
+        else:
+            for at in range(tl.num_action):
 #              if (st%1000==0):
 #                  print(str(st)+" and "+str(at))
-            rwd=reward(game=cs_cl,action_pos=at)
-            #compute next state- s'
-            ns_cl=deepcopy(cs_cl)
-            ns_cl.ply_action(pos=at,plyr=1)
-            ns_arr=ns_cl.state.flatten()
-            ns_idx=tl.fstate.tolist().index(ns_arr.tolist())
-            nxt_q[st,at]=rwd+m_q[ns_idx]
+                rwd=reward(game=cs_cl,action_pos=at)
+                if (rwd==-1):#the action is not legal
+                    nxt_q[st,at]=big_neg
+                else:
+                    #compute next state- s'
+                    ns_cl=deepcopy(cs_cl)
+                    ns_cl.ply_action(pos=at,plyr=1)
+                    ns_arr=ns_cl.state.flatten()
+                    ns_idx=tl.fstate.tolist().index(ns_arr.tolist())
+                    nxt_q[st,at]=rwd+m_q[ns_idx]
     return nxt_q
 
 def bellman_iter():
