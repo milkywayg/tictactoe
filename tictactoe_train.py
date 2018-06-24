@@ -62,10 +62,11 @@ def bellman_iter():
     while err>eps:
         print("---- Iteration number ="+str(idx))
         n_q=bellman_1_step_iter(q)
-        n_err_arr=abs(n_q-q)
+        n_err_arr=np.absolute(n_q-q)
         n_err=np.amax(n_err_arr)
+        summ=np.sum(n_err_arr)
         err=n_err
-        print("==== Iteration #"+str(idx)+" error="+str(err))
+        print("==== Iteration #"+str(idx)+" error="+str(err)+" sum="+str(summ))
         q=np.copy(n_q)
         idx+=1
     return q

@@ -14,7 +14,7 @@ start by defining a class of states with methods:
     -next state given the action 
 '''
 
-ms=3
+ms=tl.ms
 
 def cls():
    os.system('clear') 
