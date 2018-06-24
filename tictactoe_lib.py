@@ -122,7 +122,7 @@ def cartesian(arrays, out=None):
 
 
 
-vs=[-1,0,-1]
+vs=[-1,0,1]
 num_state=3**9
 num_action=9
 fstate=cartesian((vs,vs,vs,vs,vs,vs,vs,vs,vs)) 
