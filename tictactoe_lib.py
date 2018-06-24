@@ -3,7 +3,7 @@ import numpy as np
 from copy import copy, deepcopy
 
 
-ms=2
+ms=3
 
 class ttt_cl:
     #the state is represented by a 3x3 matrix
@@ -46,7 +46,9 @@ class ttt_cl:
         if (pos<0 or pos>((ms**2)-1)):
             return 1 #error
         else:
-            if (np.sum(self.state)==1):
+            if (np.sum(self.state)==1 and plyr==1):
+                return 1 #error bad action get out of balance
+            elif(np.sum(self.state)==-1 and plyr==-1):
                 return 1 #error bad action get out of balance
             if (sf[pos]==0):
                 sf[pos]=plyr
@@ -138,7 +140,7 @@ def cartesian(arrays, out=None):
 vs=[-1,0,1]
 num_state=(len(vs))**(ms**2)
 num_action=ms**2
-fstate=cartesian((vs,vs,vs,vs)) #,vs,vs,vs,vs,vs)) 
+fstate=cartesian((vs,vs,vs,vs,vs,vs,vs,vs,vs)) 
 
 
 

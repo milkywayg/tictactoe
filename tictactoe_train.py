@@ -3,7 +3,8 @@ import numpy as np
 import os
 import tictactoe_lib as tl
 import pickle
-from copy import copy, deepcopy
+#  from copy import copy, deepcopy
+from copy import deepcopy
 
 
 #  f = open('test1.p', 'wb')
@@ -46,9 +47,8 @@ def bellman_1_step_iter(q):
     for st in range(tl.num_state):
         cs_arr=np.reshape(tl.fstate[st],(ms,ms))
         cs_cl=tl.ttt_cl(cs_arr)
-        if (st==39):
-            print('dd')
-            pass
+#          if (st==39):
+#              print('dd')
         if (cs_cl.game_done() or cs_cl.is_bad_state()):
             nxt_q[st,:]=np.zeros((1,tl.num_action))
         else:
