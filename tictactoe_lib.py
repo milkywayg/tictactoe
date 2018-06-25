@@ -140,7 +140,12 @@ def cartesian(arrays, out=None):
 vs=[-1,0,1]
 num_state=(len(vs))**(ms**2)
 num_action=ms**2
-fstate=cartesian((vs,vs,vs,vs,vs,vs,vs,vs,vs)) 
+if (ms==3):
+    #for ms=3
+    fstate=cartesian((vs,vs,vs,vs,vs,vs,vs,vs,vs))
+elif(ms==2):
+    #for ms=2
+    fstate=cartesian((vs,vs,vs,vs)) 
 
 
 

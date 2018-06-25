@@ -36,13 +36,9 @@ def reward(game, action_pos=0):
 qinit=np.zeros((tl.num_state,tl.num_action))
 ms=tl.ms
 
-def bellman_1_step_iter(q):
+def bellman_1_step_iter(q,gamma):
     #compute max_a' Q(s',a')
     idx=0
-    m_q=[]
-    for line in q:
-        m_q=m_q+[max(line)]
-        idx+=1
     nxt_q=np.copy(qinit)
     for st in range(tl.num_state):
         cs_arr=np.reshape(tl.fstate[st],(ms,ms))
@@ -53,28 +49,29 @@ def bellman_1_step_iter(q):
             nxt_q[st,:]=np.zeros((1,tl.num_action))
         else:
             for at in range(tl.num_action):
-#              if (st%1000==0):
-#                  print(str(st)+" and "+str(at))
-                rwd=reward(game=cs_cl,action_pos=at)
-                if (rwd==-1):#the action is not legal
+                if (tl.fstate[st][at]!=0): #not a legal action
                     nxt_q[st,at]=big_neg
                 else:
+                    rwd=reward(game=cs_cl,action_pos=at)
                     #compute next state- s'
                     ns_cl=deepcopy(cs_cl)
                     ns_cl.ply_action(pos=at,plyr=1)
                     ns_arr=ns_cl.state.flatten()
                     ns_idx=tl.fstate.tolist().index(ns_arr.tolist())
-                    nxt_q[st,at]=rwd+m_q[ns_idx]
+                    q_ns=q[ns_idx,:]
+                    nxt_q[st,at]=rwd+gamma*max(q_ns)
     return nxt_q
 
-def bellman_iter():
+def bellman_iter(gamma):
     q=np.copy(qinit)
-    eps=1e-3
+    eps=0.01
     err=1
     idx=0
     while err>eps:
         print("---- Iteration number ="+str(idx))
-        n_q=bellman_1_step_iter(q)
+        n_q=bellman_1_step_iter(q,gamma)
+        print("--Iteration #"+str(idx))
+        print(n_q)
         n_err_arr=np.absolute(n_q-q)
         n_err=np.amax(n_err_arr)
         summ=np.sum(n_err_arr)
@@ -85,7 +82,8 @@ def bellman_iter():
     return q
 
 #====================
-q_end=bellman_iter()
+gamma=0.9
+q_end=bellman_iter(gamma)
 
 
 f = open('q_func.p', 'wb')
