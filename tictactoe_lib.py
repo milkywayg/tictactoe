@@ -86,6 +86,35 @@ class ttt_cl:
         sf=s.flatten()
         return sf==0
 
+    def st_idx(self):
+        arr=self.state.flatten()
+        return fstate.tolist().index(arr.tolist())
+
+
+    #returns the list of possible actions of the opponent
+    #with their respective proba
+    #output [err,win,lose,end game, next states] 
+    def nxt_states(self,action=0):
+        t_game=deepcopy(self)
+        err=t_game.ply_action(pos=action,plyr=1)
+        if (err==1):
+            return [1, 0,0,0,[]]
+        #if no error
+        if (t_game.is_winner(plyr=1)):
+            return [0, 1,0, 1,[]]
+        elif (t_game.game_done()):
+            return [0, 0,0, 1,[]]
+        else: #the game is not done by the cpu action
+            ps_state=[]
+            for opp_pos in t_game.free_pos():
+                t_game_s1=deepcopy(t_game)
+                t_game_s1.ply_action(pos=opp_pos, plyr=-1)
+                if (t_game_s1.is_winner(plyr=-1)):
+                    return [0,0,1,1,[]]
+                else:
+                    ps_state=ps_state+[t_game_s1.st_idx()]
+            return [0,0,0,0,ps_state]
+
 
 
 

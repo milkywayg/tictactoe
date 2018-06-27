@@ -21,14 +21,17 @@ from copy import deepcopy
 big_neg=-1000
 
 def reward(game, action_pos=0):
-    t_game=deepcopy(game)
-    err=t_game.ply_action(pos=action_pos,plyr=1)
+    err, win, lose, end_game, nstate = game.nxt_states(action=action_pos)
     if (err==1):
-        return -1
-    if (t_game.is_winner(plyr=1)):
-        return 1
+        return [-10,[]] #should never go here
+    if (win==1):
+        return [1,[]]
+    elif (lose==1):
+        return [-1,[]]
+    elif (end_game==1):
+        return [0,[]]
     else:
-        return 0
+        return [0,nstate]
 
 
 #Q-function is vector of 9 + 1 (state+action)
@@ -52,14 +55,15 @@ def bellman_1_step_iter(q,gamma):
                 if (tl.fstate[st][at]!=0): #not a legal action
                     nxt_q[st,at]=big_neg
                 else:
-                    rwd=reward(game=cs_cl,action_pos=at)
+                    rwd,ns_idx_l=reward(game=cs_cl,action_pos=at)
                     #compute next state- s'
-                    ns_cl=deepcopy(cs_cl)
-                    ns_cl.ply_action(pos=at,plyr=1)
-                    ns_arr=ns_cl.state.flatten()
-                    ns_idx=tl.fstate.tolist().index(ns_arr.tolist())
-                    q_ns=q[ns_idx,:]
-                    nxt_q[st,at]=rwd+gamma*max(q_ns)
+                    max_q_ns=[max(q[sidx,:]) for sidx in ns_idx_l]
+                    if (rwd!=0):
+                        nxt_q[st,at]=rwd
+                    elif(max_q_ns==[]):
+                        nxt_q[st,at]=0
+                    else:
+                        nxt_q[st,at]=gamma*np.array(max_q_ns).mean()
     return nxt_q
 
 def bellman_iter(gamma):
@@ -82,7 +86,7 @@ def bellman_iter(gamma):
     return q
 
 #====================
-gamma=0.9
+gamma=1
 q_end=bellman_iter(gamma)
 
 
